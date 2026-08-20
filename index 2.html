@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#173c2a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Gartenbuch">
+<title>Mein Garten – Projekte & Kosten</title>
+<style>
+:root{
+  --bg:#f3f5f0;--card:#fff;--ink:#17231b;--muted:#6d766f;--line:#dfe5dd;
+  --brand:#1f5b3c;--brand2:#2f7b52;--soft:#e8f2eb;--warn:#a76112;--danger:#a43a36;
+  --shadow:0 10px 28px rgba(24,50,34,.08);--r:18px
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:92px}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.top{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,#173c2a,#2d6f4c);color:#fff;padding:calc(12px + env(safe-area-inset-top)) 16px 15px;box-shadow:0 5px 18px rgba(0,0,0,.14)}
+.top h1{font-size:21px;margin:0 0 3px}.top small{opacity:.84}
+main{max-width:920px;margin:auto;padding:16px}
+.section{display:none}.section.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}
+.metric,.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.metric{padding:15px}.metric .label{font-size:12px;color:var(--muted)}.metric .value{font-size:23px;font-weight:850;margin-top:4px}.metric .sub{font-size:11px;color:var(--muted);margin-top:4px}
+.card{padding:15px;margin:13px 0}
+.card h2,.card h3{margin:0 0 12px}.card h2{font-size:19px}.card h3{font-size:16px}
+.row{display:flex;gap:9px;align-items:center}.row.wrap{flex-wrap:wrap}.between{justify-content:space-between}
+.stack{display:grid;gap:10px}
+.btn{border:0;border-radius:12px;padding:10px 13px;font-weight:750;background:#e8ece8;color:var(--ink)}
+.btn.primary{background:var(--brand);color:#fff}.btn.soft{background:var(--soft);color:var(--brand)}.btn.danger{background:#f7e6e4;color:var(--danger)}.btn.small{padding:7px 9px;font-size:12px}
+.list{display:grid;gap:10px}
+.item{border:1px solid var(--line);border-radius:15px;padding:13px;background:#fff}
+.item .title{font-weight:800}.item .meta{font-size:12px;color:var(--muted);margin-top:4px}.item .amount{font-weight:850;white-space:nowrap}
+.pill{display:inline-block;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:700;background:var(--soft);color:var(--brand);margin-right:4px}
+.pill.warn{background:#fff0dc;color:#975b10}.pill.gray{background:#eeeeea;color:#616861}
+.progress{height:9px;background:#e7ebe6;border-radius:99px;overflow:hidden;margin-top:8px}.progress>i{display:block;height:100%;background:var(--brand2);width:0}
+.empty{text-align:center;color:var(--muted);padding:25px 8px}
+label{font-size:12px;font-weight:750;color:#4d584f}
+input,select,textarea{width:100%;border:1px solid #cad2ca;border-radius:12px;padding:10px 11px;background:#fff;color:var(--ink);outline:none}
+textarea{min-height:84px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--brand2);box-shadow:0 0 0 3px rgba(47,123,82,.12)}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}
+hr{border:0;border-top:1px solid var(--line);margin:13px 0}
+.fab{position:fixed;right:18px;bottom:84px;z-index:25;border:0;width:55px;height:55px;border-radius:50%;background:var(--brand);color:#fff;font-size:30px;box-shadow:0 8px 24px rgba(23,60,42,.35)}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(5,1fr);background:rgba(255,255,255,.96);border-top:1px solid var(--line);padding:7px 5px calc(7px + env(safe-area-inset-bottom));backdrop-filter:blur(14px)}
+nav button{border:0;background:transparent;padding:4px 2px;color:#697269;font-size:10px}
+nav button b{display:block;font-size:20px;line-height:21px;margin-bottom:2px}
+nav button.active{color:var(--brand);font-weight:800}
+dialog{border:0;padding:0;background:transparent;width:min(690px,calc(100% - 16px));max-height:91vh}
+dialog::backdrop{background:rgba(8,20,12,.58);backdrop-filter:blur(2px)}
+.modal{background:var(--bg);border-radius:21px;padding:15px;max-height:89vh;overflow:auto}
+.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.modalhead h2{margin:0;font-size:19px}
+.x{border:0;border-radius:50%;width:34px;height:34px;background:#e5e9e4;font-size:20px}
+.photo{width:72px;height:72px;border-radius:12px;object-fit:cover;border:1px solid var(--line)}
+.photoBig{width:100%;max-height:420px;object-fit:contain;border-radius:14px;background:#111}
+.search{margin:10px 0 13px}
+.kv{display:grid;grid-template-columns:1fr auto;gap:7px;font-size:13px}.kv span:nth-child(odd){color:var(--muted)}
+.barrow{display:grid;grid-template-columns:90px 1fr 68px;gap:8px;align-items:center;font-size:12px;margin:9px 0}.bar{height:10px;border-radius:99px;background:#e9ece8;overflow:hidden}.bar i{display:block;height:100%;background:var(--brand2)}
+.badge{font-size:11px;padding:3px 7px;border-radius:99px;background:#f0f1ee}
+.note{white-space:pre-wrap}
+@media(max-width:600px){.formgrid{grid-template-columns:1fr}.full{grid-column:auto}.grid{grid-template-columns:1fr 1fr}.metric .value{font-size:20px}.hideMob{display:none}}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>🌿 Mein Garten</h1>
+  <small>Projekte · Kosten · Anschaffungen · Wartung</small>
+</header>
+
+<main>
+<section id="home" class="section active">
+  <div class="grid">
+    <div class="metric"><div class="label">Gesamtausgaben</div><div class="value" id="mTotal">0,00 €</div><div class="sub" id="mTotalSub">0 Buchungen</div></div>
+    <div class="metric"><div class="label">Dieses Jahr</div><div class="value" id="mYear">0,00 €</div><div class="sub" id="mYearSub"></div></div>
+    <div class="metric"><div class="label">Laufende Projekte</div><div class="value" id="mProjects">0</div><div class="sub" id="mProjectsSub">0 gesamt</div></div>
+    <div class="metric"><div class="label">Anschaffungen</div><div class="value" id="mAssets">0,00 €</div><div class="sub" id="mAssetsSub">0 Geräte/Werkzeuge</div></div>
+  </div>
+
+  <div class="card">
+    <div class="row between"><h2>Projekte</h2><button class="btn small primary" onclick="openProject()">+ Projekt</button></div>
+    <div id="homeProjects" class="list"></div>
+  </div>
+
+  <div class="card">
+    <div class="row between"><h2>Letzte Ausgaben</h2><button class="btn small soft" onclick="showSection('expenses')">Alle</button></div>
+    <div id="homeExpenses" class="list"></div>
+  </div>
+</section>
+
+<section id="projects" class="section">
+  <div class="row between"><h2>🏗️ Projekte</h2><button class="btn primary" onclick="openProject()">+ Neu</button></div>
+  <div class="search"><input id="projectSearch" placeholder="Projekte suchen …" oninput="renderProjects()"></div>
+  <div id="projectList" class="list"></div>
+</section>
+
+<section id="expenses" class="section">
+  <div class="row between"><h2>💶 Ausgaben</h2><button class="btn primary" onclick="openExpense()">+ Ausgabe</button></div>
+  <div class="card">
+    <div class="formgrid">
+      <div><label>Projekt</label><select id="expenseFilterProject" onchange="renderExpenses()"></select></div>
+      <div><label>Kategorie</label><select id="expenseFilterCategory" onchange="renderExpenses()"></select></div>
+      <div><label>Jahr</label><select id="expenseFilterYear" onchange="renderExpenses()"></select></div>
+      <div><label>Suche</label><input id="expenseSearch" placeholder="Händler / Beschreibung" oninput="renderExpenses()"></div>
+    </div>
+  </div>
+  <div id="expenseList" class="list"></div>
+</section>
+
+<section id="assets" class="section">
+  <div class="row between"><h2>🔧 Anschaffungen</h2><button class="btn primary" onclick="openAsset()">+ Gerät</button></div>
+  <div class="card"><small>Werkzeuge, Maschinen und andere Anschaffungen werden getrennt von Projektkosten geführt.</small></div>
+  <div id="assetList" class="list"></div>
+</section>
+
+<section id="more" class="section">
+  <div class="card">
+    <h2>📊 Auswertung</h2>
+    <div class="formgrid">
+      <div><label>Jahr</label><select id="reportYear" onchange="renderReports()"></select></div>
+      <div><label>Projekt</label><select id="reportProject" onchange="renderReports()"></select></div>
+    </div>
+    <hr>
+    <div id="reportSummary" class="kv"></div>
+    <div id="categoryBars"></div>
+  </div>
+
+  <div class="card">
+    <div class="row between"><h2>🛠️ Wartung</h2><button class="btn small primary" onclick="openMaintenance()">+ Eintrag</button></div>
+    <div id="maintenanceList" class="list"></div>
+  </div>
+
+  <div class="card">
+    <div class="row between"><h2>📝 Allgemeine Notizen</h2><button class="btn small primary" onclick="openNote()">+ Notiz</button></div>
+    <div id="noteList" class="list"></div>
+  </div>
+
+  <div class="card">
+    <h2>💾 Datensicherung</h2>
+    <div class="stack">
+      <button class="btn soft" onclick="exportBackup()">Backup herunterladen</button>
+      <label class="btn" style="text-align:center">Backup importieren<input id="importFile" type="file" accept=".json,application/json" hidden onchange="importBackup(event)"></label>
+      <button class="btn danger" onclick="resetAll()">Alle Daten löschen</button>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:0">Die Daten werden lokal auf diesem Gerät gespeichert. Regelmäßige Backups sind empfehlenswert.</p>
+  </div>
+</section>
+</main>
+
+<button class="fab" aria-label="Schnell hinzufügen" onclick="quickAdd()">+</button>
+
+<nav>
+  <button class="active" data-sec="home" onclick="showSection('home',this)"><b>⌂</b>Start</button>
+  <button data-sec="projects" onclick="showSection('projects',this)"><b>🏗️</b>Projekte</button>
+  <button data-sec="expenses" onclick="showSection('expenses',this)"><b>€</b>Ausgaben</button>
+  <button data-sec="assets" onclick="showSection('assets',this)"><b>🔧</b>Geräte</button>
+  <button data-sec="more" onclick="showSection('more',this)"><b>•••</b>Mehr</button>
+</nav>
+
+<dialog id="dlg">
+  <div class="modal">
+    <div class="modalhead"><h2 id="dlgTitle">Eintrag</h2><button class="x" onclick="closeDlg()">×</button></div>
+    <div id="dlgBody"></div>
+  </div>
+</dialog>
+
+<script>
+const KEY='gartenbuch_v1';
+const categories=['Pflanzen','Erde & Substrat','Rindenmulch','Holz','Zaun','Bewässerung','Dünger','Baumaterial','Werkzeug','Maschinen','Miete','Transport','Dekoration','Sonstiges'];
+const statuses=['Geplant','Läuft','Pausiert','Fertig'];
+const assetTypes=['Maschine','Werkzeug','Gartengerät','Bewässerung','Sonstiges'];
+
+let db=load();
+function blank(){return {version:1,projects:[],expenses:[],assets:[],maintenance:[],notes:[]}}
+function load(){try{return Object.assign(blank(),JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){return blank()}}
+function save(){localStorage.setItem(KEY,JSON.stringify(db));renderAll()}
+function id(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function euro(n){return Number(n||0).toLocaleString('de-AT',{style:'currency',currency:'EUR'})}
+function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function today(){return new Date().toISOString().slice(0,10)}
+function yearOf(d){return d?String(d).slice(0,4):''}
+function projectName(pid){return db.projects.find(p=>p.id===pid)?.name||'Ohne Projekt'}
+function sum(arr,fn=x=>x.amount){return arr.reduce((a,x)=>a+Number(fn(x)||0),0)}
+function projectSpent(pid){return sum(db.expenses.filter(e=>e.projectId===pid))}
+function selected(sel){return document.querySelector(sel)?.value||''}
+
+function showSection(sec,btn){
+  document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
+  document.getElementById(sec).classList.add('active');
+  document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.sec===sec));
+  window.scrollTo({top:0,behavior:'smooth'});
+  renderAll();
+}
+function closeDlg(){document.getElementById('dlg').close()}
+function openDlg(title,html){document.getElementById('dlgTitle').textContent=title;document.getElementById('dlgBody').innerHTML=html;document.getElementById('dlg').showModal()}
+
+function renderAll(){
+  refreshSelects();
+  renderHome();renderProjects();renderExpenses();renderAssets();renderMaintenance();renderNotes();renderReports();
+}
+
+function renderHome(){
+  const allSpend=sum(db.expenses)+sum(db.assets,a=>a.price)+sum(db.maintenance,m=>m.cost);
+  const y=String(new Date().getFullYear());
+  const yearSpend=sum(db.expenses.filter(e=>yearOf(e.date)===y))+sum(db.assets.filter(a=>yearOf(a.date)===y),a=>a.price)+sum(db.maintenance.filter(m=>yearOf(m.date)===y),m=>m.cost);
+  document.getElementById('mTotal').textContent=euro(allSpend);
+  document.getElementById('mTotalSub').textContent=`${db.expenses.length+db.assets.length+db.maintenance.length} Buchungen`;
+  document.getElementById('mYear').textContent=euro(yearSpend);
+  document.getElementById('mYearSub').textContent=y;
+  const active=db.projects.filter(p=>p.status!=='Fertig').length;
+  document.getElementById('mProjects').textContent=active;
+  document.getElementById('mProjectsSub').textContent=`${db.projects.length} gesamt`;
+  document.getElementById('mAssets').textContent=euro(sum(db.assets,a=>a.price));
+  document.getElementById('mAssetsSub').textContent=`${db.assets.length} Geräte/Werkzeuge`;
+  const hp=document.getElementById('homeProjects');
+  const ps=[...db.projects].sort((a,b)=>(a.status==='Fertig')-(b.status==='Fertig')).slice(0,5);
+  hp.innerHTML=ps.length?ps.map(projectCard).join(''):'<div class="empty">Noch keine Projekte angelegt.</div>';
+  const he=document.getElementById('homeExpenses');
+  const ex=[...db.expenses].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,5);
+  he.innerHTML=ex.length?ex.map(expenseCard).join(''):'<div class="empty">Noch keine Ausgaben eingetragen.</div>';
+}
+
+function projectCard(p){
+  const spent=projectSpent(p.id), budget=Number(p.budget||0), pct=budget?Math.min(100,spent/budget*100):0;
+  return `<div class="item">
+    <div class="row between"><div><div class="title">${esc(p.name)}</div><div class="meta"><span class="pill">${esc(p.status)}</span>${p.start?esc(p.start):''}${p.end?' – '+esc(p.end):''}</div></div><div class="amount">${euro(spent)}</div></div>
+    ${budget?`<div class="progress"><i style="width:${pct}%"></i></div><div class="meta">${euro(spent)} von ${euro(budget)} · ${Math.round(pct)}%</div>`:''}
+    ${p.notes?`<div class="meta note">${esc(p.notes)}</div>`:''}
+    <div class="row wrap" style="margin-top:9px"><button class="btn small soft" onclick="openExpense('', '${p.id}')">+ Ausgabe</button><button class="btn small" onclick="openProject('${p.id}')">Bearbeiten</button><button class="btn small" onclick="showProjectDetail('${p.id}')">Details</button></div>
+  </div>`
+}
+
+function renderProjects(){
+  const q=(document.getElementById('projectSearch')?.value||'').toLowerCase();
+  const arr=db.projects.filter(p=>(p.name+' '+(p.notes||'')).toLowerCase().includes(q)).sort((a,b)=>a.name.localeCompare(b.name,'de'));
+  document.getElementById('projectList').innerHTML=arr.length?arr.map(projectCard).join(''):'<div class="empty">Keine Projekte gefunden.</div>';
+}
+
+function expenseCard(e){
+  return `<div class="item">
+    <div class="row between"><div><div class="title">${esc(e.description||e.category)}</div><div class="meta">${esc(e.date||'')} · ${esc(projectName(e.projectId))} · ${esc(e.category||'Sonstiges')}${e.vendor?' · '+esc(e.vendor):''}</div></div><div class="amount">${euro(e.amount)}</div></div>
+    ${e.receipt?`<div style="margin-top:9px"><img class="photo" src="${e.receipt}" onclick="viewPhoto('${e.id}')"></div>`:''}
+    <div class="row wrap" style="margin-top:9px"><button class="btn small" onclick="openExpense('${e.id}')">Bearbeiten</button><button class="btn small danger" onclick="deleteExpense('${e.id}')">Löschen</button></div>
+  </div>`
+}
+function renderExpenses(){
+  const pf=selected('#expenseFilterProject'), cf=selected('#expenseFilterCategory'), yf=selected('#expenseFilterYear'), q=(document.getElementById('expenseSearch')?.value||'').toLowerCase();
+  let arr=db.expenses.filter(e=>(!pf||e.projectId===pf)&&(!cf||e.category===cf)&&(!yf||yearOf(e.date)===yf)&&((e.description||'')+' '+(e.vendor||'')).toLowerCase().includes(q));
+  arr.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  const total=sum(arr);
+  document.getElementById('expenseList').innerHTML=(arr.length?`<div class="card"><div class="row between"><b>${arr.length} Ausgaben</b><b>${euro(total)}</b></div></div>`:'')+(arr.length?arr.map(expenseCard).join(''):'<div class="empty">Keine Ausgaben gefunden.</div>');
+}
+
+function renderAssets(){
+  const arr=[...db.assets].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  document.getElementById('assetList').innerHTML=arr.length?arr.map(a=>`<div class="item">
+    <div class="row between"><div><div class="title">${esc(a.name)}</div><div class="meta">${esc(a.type||'')} · ${esc(a.date||'')}${a.vendor?' · '+esc(a.vendor):''}</div></div><div class="amount">${euro(a.price)}</div></div>
+    ${a.notes?`<div class="meta note">${esc(a.notes)}</div>`:''}
+    <div class="row wrap" style="margin-top:9px"><button class="btn small soft" onclick="openMaintenance('', '${a.id}')">+ Wartung</button><button class="btn small" onclick="openAsset('${a.id}')">Bearbeiten</button><button class="btn small danger" onclick="deleteAsset('${a.id}')">Löschen</button></div>
+  </div>`).join(''):'<div class="empty">Noch keine Anschaffungen eingetragen.</div>';
+}
+
+function renderMaintenance(){
+  const arr=[...db.maintenance].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  document.getElementById('maintenanceList').innerHTML=arr.length?arr.map(m=>`<div class="item">
+    <div class="row between"><div><div class="title">${esc(m.title)}</div><div class="meta">${esc(m.date||'')} · ${esc(db.assets.find(a=>a.id===m.assetId)?.name||'Allgemein')}</div></div><div class="amount">${euro(m.cost)}</div></div>
+    ${m.notes?`<div class="meta note">${esc(m.notes)}</div>`:''}
+    <div class="row wrap" style="margin-top:9px"><button class="btn small" onclick="openMaintenance('${m.id}')">Bearbeiten</button><button class="btn small danger" onclick="deleteMaintenance('${m.id}')">Löschen</button></div>
+  </div>`).join(''):'<div class="empty">Noch keine Wartungen eingetragen.</div>';
+}
+
+function renderNotes(){
+  const arr=[...db.notes].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  document.getElementById('noteList').innerHTML=arr.length?arr.map(n=>`<div class="item">
+    <div class="row between"><div class="title">${esc(n.title)}</div><span class="badge">${esc(n.date||'')}</span></div>
+    <div class="meta note" style="margin-top:8px">${esc(n.text||'')}</div>
+    <div class="row wrap" style="margin-top:9px"><button class="btn small" onclick="openNote('${n.id}')">Bearbeiten</button><button class="btn small danger" onclick="deleteNote('${n.id}')">Löschen</button></div>
+  </div>`).join(''):'<div class="empty">Noch keine Notizen vorhanden.</div>';
+}
+
+function refreshSelects(){
+  const pOpts='<option value="">Alle Projekte</option>'+db.projects.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
+  const cOpts='<option value="">Alle Kategorien</option>'+categories.map(c=>`<option>${esc(c)}</option>`).join('');
+  const years=[...new Set([...db.expenses.map(e=>yearOf(e.date)),...db.assets.map(a=>yearOf(a.date)),...db.maintenance.map(m=>yearOf(m.date)),String(new Date().getFullYear())].filter(Boolean))].sort().reverse();
+  const yOpts='<option value="">Alle Jahre</option>'+years.map(y=>`<option>${y}</option>`).join('');
+  [['expenseFilterProject',pOpts],['reportProject',pOpts],['expenseFilterCategory',cOpts],['expenseFilterYear',yOpts],['reportYear',yOpts]].forEach(([id,opts])=>{
+    const el=document.getElementById(id); if(!el)return; const old=el.value; el.innerHTML=opts; if([...el.options].some(o=>o.value===old))el.value=old;
+  });
+}
+function renderReports(){
+  const y=selected('#reportYear'), p=selected('#reportProject');
+  let ex=db.expenses.filter(e=>(!y||yearOf(e.date)===y)&&(!p||e.projectId===p));
+  let assets=db.assets.filter(a=>(!y||yearOf(a.date)===y));
+  let maint=db.maintenance.filter(m=>(!y||yearOf(m.date)===y));
+  const exTotal=sum(ex), aTotal=sum(assets,a=>a.price), mTotal=sum(maint,m=>m.cost), total=exTotal+aTotal+mTotal;
+  document.getElementById('reportSummary').innerHTML=`<span>Projekt-/Gartenausgaben</span><b>${euro(exTotal)}</b><span>Anschaffungen</span><b>${euro(aTotal)}</b><span>Wartung</span><b>${euro(mTotal)}</b><span>Gesamt</span><b>${euro(total)}</b>`;
+  const grouped={}; ex.forEach(e=>grouped[e.category||'Sonstiges']=(grouped[e.category||'Sonstiges']||0)+Number(e.amount||0));
+  const entries=Object.entries(grouped).sort((a,b)=>b[1]-a[1]), max=Math.max(1,...entries.map(x=>x[1]));
+  document.getElementById('categoryBars').innerHTML=entries.length?'<hr><h3>Kategorien</h3>'+entries.map(([k,v])=>`<div class="barrow"><span>${esc(k)}</span><div class="bar"><i style="width:${v/max*100}%"></i></div><b>${euro(v)}</b></div>`).join(''):'';
+}
+
+function openProject(pid=''){
+  const p=db.projects.find(x=>x.id===pid)||{id:'',name:'',budget:'',status:'Geplant',start:today(),end:'',notes:''};
+  openDlg(p.id?'Projekt bearbeiten':'Neues Projekt',`<div class="formgrid">
+    <div class="full"><label>Projektname</label><input id="pName" value="${esc(p.name)}" placeholder="z. B. Kirschlorbeer & Beet"></div>
+    <div><label>Budget (€)</label><input id="pBudget" type="number" min="0" step="0.01" value="${p.budget||''}"></div>
+    <div><label>Status</label><select id="pStatus">${statuses.map(s=>`<option ${s===p.status?'selected':''}>${s}</option>`).join('')}</select></div>
+    <div><label>Start</label><input id="pStart" type="date" value="${p.start||''}"></div>
+    <div><label>Fertig / Ziel</label><input id="pEnd" type="date" value="${p.end||''}"></div>
+    <div class="full"><label>Notizen</label><textarea id="pNotes" placeholder="Maße, Material, Ideen …">${esc(p.notes||'')}</textarea></div>
+    <div class="full row"><button class="btn primary" onclick="saveProject('${p.id}')">Speichern</button>${p.id?`<button class="btn danger" onclick="deleteProject('${p.id}')">Projekt löschen</button>`:''}</div>
+  </div>`);
+}
+function saveProject(pid){
+  const obj={id:pid||id(),name:document.getElementById('pName').value.trim(),budget:+document.getElementById('pBudget').value||0,status:document.getElementById('pStatus').value,start:document.getElementById('pStart').value,end:document.getElementById('pEnd').value,notes:document.getElementById('pNotes').value.trim()};
+  if(!obj.name)return alert('Bitte einen Projektnamen eingeben.');
+  const i=db.projects.findIndex(x=>x.id===pid); if(i>=0)db.projects[i]=obj; else db.projects.push(obj); closeDlg();save();
+}
+function deleteProject(pid){
+  if(db.expenses.some(e=>e.projectId===pid) && !confirm('Diesem Projekt sind Ausgaben zugeordnet. Projekt trotzdem löschen? Die Ausgaben bleiben erhalten.'))return;
+  if(!db.expenses.some(e=>e.projectId===pid) && !confirm('Projekt wirklich löschen?'))return;
+  db.projects=db.projects.filter(x=>x.id!==pid);closeDlg();save();
+}
+function showProjectDetail(pid){
+  const p=db.projects.find(x=>x.id===pid); if(!p)return;
+  const ex=db.expenses.filter(e=>e.projectId===pid).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  const spent=sum(ex), budget=Number(p.budget||0), rest=budget-spent;
+  openDlg(p.name,`<div class="card"><div class="kv"><span>Status</span><b>${esc(p.status)}</b><span>Budget</span><b>${euro(budget)}</b><span>Ausgegeben</span><b>${euro(spent)}</b><span>Rest</span><b>${euro(rest)}</b></div>${p.notes?`<hr><div class="note">${esc(p.notes)}</div>`:''}</div><h3>Ausgaben</h3><div class="list">${ex.length?ex.map(expenseCard).join(''):'<div class="empty">Noch keine Ausgaben.</div>'}</div>`);
+}
+
+function openExpense(eid='', preProject=''){
+  const e=db.expenses.find(x=>x.id===eid)||{id:'',projectId:preProject,date:today(),category:'Sonstiges',description:'',vendor:'',amount:'',receipt:''};
+  openDlg(e.id?'Ausgabe bearbeiten':'Neue Ausgabe',`<div class="formgrid">
+    <div><label>Datum</label><input id="eDate" type="date" value="${e.date||today()}"></div>
+    <div><label>Betrag (€)</label><input id="eAmount" type="number" min="0" step="0.01" inputmode="decimal" value="${e.amount||''}"></div>
+    <div><label>Projekt</label><select id="eProject"><option value="">Ohne Projekt</option>${db.projects.map(p=>`<option value="${p.id}" ${p.id===e.projectId?'selected':''}>${esc(p.name)}</option>`).join('')}</select></div>
+    <div><label>Kategorie</label><select id="eCategory">${categories.map(c=>`<option ${c===e.category?'selected':''}>${esc(c)}</option>`).join('')}</select></div>
+    <div><label>Händler / Geschäft</label><input id="eVendor" value="${esc(e.vendor||'')}" placeholder="z. B. Lagerhaus"></div>
+    <div><label>Beschreibung</label><input id="eDesc" value="${esc(e.description||'')}" placeholder="z. B. 10 Säcke Rindenmulch"></div>
+    <div class="full"><label>Belegfoto (optional)</label><input id="eReceipt" type="file" accept="image/*" capture="environment"><small style="color:var(--muted)">Foto wird automatisch verkleinert.</small></div>
+    ${e.receipt?`<div class="full"><img class="photo" src="${e.receipt}"><label class="row" style="margin-top:6px"><input style="width:auto" type="checkbox" id="removeReceipt"> Belegfoto entfernen</label></div>`:''}
+    <div class="full row"><button class="btn primary" onclick="saveExpense('${e.id}')">Speichern</button>${e.id?`<button class="btn danger" onclick="deleteExpense('${e.id}')">Löschen</button>`:''}</div>
+  </div>`);
+}
+async function saveExpense(eid){
+  const old=db.expenses.find(x=>x.id===eid);
+  let receipt=old?.receipt||'';
+  if(document.getElementById('removeReceipt')?.checked)receipt='';
+  const file=document.getElementById('eReceipt').files[0];
+  if(file){try{receipt=await compressImage(file,900,.72)}catch(err){alert('Foto konnte nicht verarbeitet werden.');}}
+  const obj={id:eid||id(),date:document.getElementById('eDate').value,amount:+document.getElementById('eAmount').value||0,projectId:document.getElementById('eProject').value,category:document.getElementById('eCategory').value,vendor:document.getElementById('eVendor').value.trim(),description:document.getElementById('eDesc').value.trim(),receipt};
+  if(obj.amount<=0)return alert('Bitte einen Betrag größer als 0 eingeben.');
+  const i=db.expenses.findIndex(x=>x.id===eid); if(i>=0)db.expenses[i]=obj; else db.expenses.push(obj); closeDlg();save();
+}
+function deleteExpense(eid){if(!confirm('Ausgabe wirklich löschen?'))return;db.expenses=db.expenses.filter(x=>x.id!==eid);if(document.getElementById('dlg').open)closeDlg();save()}
+function viewPhoto(eid){const e=db.expenses.find(x=>x.id===eid);if(e?.receipt)openDlg('Belegfoto',`<img class="photoBig" src="${e.receipt}">`)}
+
+function openAsset(aid=''){
+  const a=db.assets.find(x=>x.id===aid)||{id:'',name:'',type:'Werkzeug',date:today(),price:'',vendor:'',notes:''};
+  openDlg(a.id?'Anschaffung bearbeiten':'Neue Anschaffung',`<div class="formgrid">
+    <div class="full"><label>Name</label><input id="aName" value="${esc(a.name)}" placeholder="z. B. STIHL Freischneider"></div>
+    <div><label>Art</label><select id="aType">${assetTypes.map(t=>`<option ${t===a.type?'selected':''}>${t}</option>`).join('')}</select></div>
+    <div><label>Kaufdatum</label><input id="aDate" type="date" value="${a.date||today()}"></div>
+    <div><label>Preis (€)</label><input id="aPrice" type="number" min="0" step="0.01" value="${a.price||''}"></div>
+    <div><label>Händler</label><input id="aVendor" value="${esc(a.vendor||'')}"></div>
+    <div class="full"><label>Notizen</label><textarea id="aNotes" placeholder="Modell, Zubehör, Garantie, Seriennummer …">${esc(a.notes||'')}</textarea></div>
+    <div class="full row"><button class="btn primary" onclick="saveAsset('${a.id}')">Speichern</button>${a.id?`<button class="btn danger" onclick="deleteAsset('${a.id}')">Löschen</button>`:''}</div>
+  </div>`);
+}
+function saveAsset(aid){
+  const obj={id:aid||id(),name:document.getElementById('aName').value.trim(),type:document.getElementById('aType').value,date:document.getElementById('aDate').value,price:+document.getElementById('aPrice').value||0,vendor:document.getElementById('aVendor').value.trim(),notes:document.getElementById('aNotes').value.trim()};
+  if(!obj.name)return alert('Bitte einen Namen eingeben.');
+  const i=db.assets.findIndex(x=>x.id===aid);if(i>=0)db.assets[i]=obj;else db.assets.push(obj);closeDlg();save();
+}
+function deleteAsset(aid){
+  if(!confirm('Anschaffung wirklich löschen? Zugehörige Wartungseinträge bleiben erhalten.'))return;
+  db.assets=db.assets.filter(x=>x.id!==aid);if(document.getElementById('dlg').open)closeDlg();save();
+}
+
+function openMaintenance(mid='', preAsset=''){
+  const m=db.maintenance.find(x=>x.id===mid)||{id:'',assetId:preAsset,date:today(),title:'',cost:'',notes:''};
+  openDlg(m.id?'Wartung bearbeiten':'Wartung eintragen',`<div class="formgrid">
+    <div><label>Datum</label><input id="wDate" type="date" value="${m.date||today()}"></div>
+    <div><label>Gerät</label><select id="wAsset"><option value="">Allgemein</option>${db.assets.map(a=>`<option value="${a.id}" ${a.id===m.assetId?'selected':''}>${esc(a.name)}</option>`).join('')}</select></div>
+    <div class="full"><label>Arbeit / Wartung</label><input id="wTitle" value="${esc(m.title||'')}" placeholder="z. B. Messer geschärft"></div>
+    <div><label>Kosten (€)</label><input id="wCost" type="number" min="0" step="0.01" value="${m.cost||''}"></div>
+    <div class="full"><label>Notizen</label><textarea id="wNotes">${esc(m.notes||'')}</textarea></div>
+    <div class="full row"><button class="btn primary" onclick="saveMaintenance('${m.id}')">Speichern</button>${m.id?`<button class="btn danger" onclick="deleteMaintenance('${m.id}')">Löschen</button>`:''}</div>
+  </div>`);
+}
+function saveMaintenance(mid){
+  const obj={id:mid||id(),date:document.getElementById('wDate').value,assetId:document.getElementById('wAsset').value,title:document.getElementById('wTitle').value.trim(),cost:+document.getElementById('wCost').value||0,notes:document.getElementById('wNotes').value.trim()};
+  if(!obj.title)return alert('Bitte eine Wartung/Arbeit eingeben.');
+  const i=db.maintenance.findIndex(x=>x.id===mid);if(i>=0)db.maintenance[i]=obj;else db.maintenance.push(obj);closeDlg();save();
+}
+function deleteMaintenance(mid){if(!confirm('Wartungseintrag wirklich löschen?'))return;db.maintenance=db.maintenance.filter(x=>x.id!==mid);if(document.getElementById('dlg').open)closeDlg();save()}
+
+function openNote(nid=''){
+  const n=db.notes.find(x=>x.id===nid)||{id:'',title:'',date:today(),text:''};
+  openDlg(n.id?'Notiz bearbeiten':'Neue Notiz',`<div class="formgrid">
+    <div><label>Titel</label><input id="nTitle" value="${esc(n.title||'')}"></div>
+    <div><label>Datum</label><input id="nDate" type="date" value="${n.date||today()}"></div>
+    <div class="full"><label>Notiz</label><textarea id="nText" style="min-height:150px">${esc(n.text||'')}</textarea></div>
+    <div class="full row"><button class="btn primary" onclick="saveNote('${n.id}')">Speichern</button>${n.id?`<button class="btn danger" onclick="deleteNote('${n.id}')">Löschen</button>`:''}</div>
+  </div>`);
+}
+function saveNote(nid){
+  const obj={id:nid||id(),title:document.getElementById('nTitle').value.trim(),date:document.getElementById('nDate').value,text:document.getElementById('nText').value.trim()};
+  if(!obj.title)return alert('Bitte einen Titel eingeben.');
+  const i=db.notes.findIndex(x=>x.id===nid);if(i>=0)db.notes[i]=obj;else db.notes.push(obj);closeDlg();save();
+}
+function deleteNote(nid){if(!confirm('Notiz wirklich löschen?'))return;db.notes=db.notes.filter(x=>x.id!==nid);if(document.getElementById('dlg').open)closeDlg();save()}
+
+function quickAdd(){
+  openDlg('Was möchtest du hinzufügen?',`<div class="stack">
+    <button class="btn primary" onclick="closeDlg();openExpense()">💶 Neue Ausgabe</button>
+    <button class="btn soft" onclick="closeDlg();openProject()">🏗️ Neues Projekt</button>
+    <button class="btn" onclick="closeDlg();openAsset()">🔧 Neue Anschaffung</button>
+    <button class="btn" onclick="closeDlg();openMaintenance()">🛠️ Wartung</button>
+    <button class="btn" onclick="closeDlg();openNote()">📝 Notiz</button>
+  </div>`);
+}
+function exportBackup(){
+  const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='gartenbuch-backup-'+today()+'.json';a.click();URL.revokeObjectURL(a.href);
+}
+function importBackup(ev){
+  const f=ev.target.files[0]; if(!f)return;
+  const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);if(!x||typeof x!=='object')throw 0;if(!confirm('Aktuelle Daten durch dieses Backup ersetzen?'))return;db=Object.assign(blank(),x);save();alert('Backup wurde importiert.')}catch(e){alert('Ungültige Backup-Datei.')}ev.target.value=''};r.readAsText(f);
+}
+function resetAll(){if(confirm('Wirklich ALLE Gartenbuch-Daten löschen?')&&confirm('Letzte Sicherheitsfrage: Alles dauerhaft löschen?')){db=blank();save()}}
+function compressImage(file,max=900,quality=.72){
+  return new Promise((resolve,reject)=>{
+    const img=new Image(), fr=new FileReader();
+    fr.onload=()=>{img.onload=()=>{let w=img.width,h=img.height;if(w>h&&w>max){h*=max/w;w=max}else if(h>=w&&h>max){w*=max/h;h=max}const c=document.createElement('canvas');c.width=Math.round(w);c.height=Math.round(h);c.getContext('2d').drawImage(img,0,0,c.width,c.height);resolve(c.toDataURL('image/jpeg',quality))};img.onerror=reject;img.src=fr.result};fr.onerror=reject;fr.readAsDataURL(file);
+  })
+}
+document.getElementById('dlg').addEventListener('click',e=>{if(e.target.id==='dlg')closeDlg()});
+renderAll();
+</script>
+</body>
+</html>
